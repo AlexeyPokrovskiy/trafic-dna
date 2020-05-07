@@ -9,9 +9,11 @@ class BinaryNode
     public $value = null; // node value
     public $left = null; // left child
     public $right = null; // right child
-    public function construct($value) {
+
+    public function __construct($value) {
         $this->value = $value;
     }
+
 }
 
 
@@ -21,6 +23,16 @@ class BinaryNode
 
 
 class InvertBinaryTreeTest extends TestCase{
+
+    public function invertTree($root){
+        if($root == null)
+            return null;
+        $temp = $root->right;
+        $root->right = $this->invertTree($root->left);
+        $root->left = $this->invertTree($temp);
+        return $root;
+    }
+
     public function testInvert()
     {
         $root = new BinaryNode(1);
@@ -36,7 +48,7 @@ class InvertBinaryTreeTest extends TestCase{
         $rootRightChild->right = $rootRightChildRightNode;
         $root->left = $rootLeftChild;
         $root->right = $rootRightChild;
-        $invertedTree = invertTree($root);
+        $invertedTree = $this->invertTree($root);
         $this->assertEquals($invertedTree->value, 1);
         $this->assertEquals($invertedTree->left->value, 3);
         $this->assertEquals($invertedTree->right->value, 2);
@@ -46,3 +58,7 @@ class InvertBinaryTreeTest extends TestCase{
         $this->assertEquals($invertedTree->right->right->value, 4);
     }
 }
+
+
+$test = new InvertBinaryTreeTest();
+$test->testInvert();
